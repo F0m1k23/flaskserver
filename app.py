@@ -12,7 +12,24 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///posts.db')  # Путь к базе данных PostgreSQL или SQLite для разработки
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Отключение отслеживания изменений для производительности
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'secret-key-here')  # Секретный ключ для JWT токенов
-CORS(app, origins=[os.environ.get('CORS_ORIGIN', 'https://your-app-name.netlify.app')])  # Включение CORS для всех маршрутов (разрешает запросы с фронтенда)
+CORS(app, origins=['https://sneakersstor.netlify.app'])
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', 'https://sneakersstor.netlify.app')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+
+@app.before_request
+def before_request():
+    if request.method == 'OPTIONS':
+        response = jsonify({'status': 'OK'})
+        response.headers.add('Access-Control-Allow-Origin', 'https://sneakersstor.netlify.app')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        return response
+    #Включение CORS для всех маршрутов (разрешает запросы с фронтенда)
 port = int(os.environ.get("PORT", 10000))
 # Инициализация расширений Flask
 bcrypt = Bcrypt(app)  # Для безопасного хеширования паролей пользователей

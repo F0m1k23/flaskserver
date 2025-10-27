@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'  # Путь к ба
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Отключение отслеживания изменений для производительности
 app.config['JWT_SECRET_KEY'] = "secret-key-here"  # Секретный ключ для JWT токенов
 CORS(app)  # Включение CORS для всех маршрутов (разрешает запросы с фронтенда)
-
+port = int(os.environ.get("PORT", 10000))
 # Инициализация расширений Flask
 bcrypt = Bcrypt(app)  # Для безопасного хеширования паролей пользователей
 jwt = JWTManager(app)  # Для управления JWT токенами аутентификации
